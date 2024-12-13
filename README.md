@@ -1,6 +1,8 @@
 # HelenusDB Papyrus
 
-HelenusDB Papyrus is a Java library offering a document-oriented repository pattern for Cassandra storage. It eliminates the need for a predefined schema, thereby providing significant flexibility in domain modeling without necessitating table data migrations.
+**Cassandra's Gone Schema-less!**
+
+HelenusDB Papyrus enables document-oriented storage for Cassandra. It eliminates the need for a predefined schema, thereby providing significant flexibility in domain modeling without necessitating table data migrations.
 
 In Papyrus, only the keys that form an object's identifier are stored as individual columns. These keys are extracted from the entity at storage time. The object itself is serialized into a storage format through a pluggable serialization process and stored as a binary blob. Currently, Papyrus supports BSON (like MongoDB) and GSON (JSON) serialization formats.
 
@@ -8,6 +10,8 @@ Given that usage of materialized views and indexes in Cassandra are discouraged 
 
 Papyrus simplifies the management of resource-oriented Plain Old Java Objects (PoJos) with multiple, denormalized views, and indexes. This is achieved through a straightforward Repository pattern, making it an ideal choice for developers building RESTful APIs to simplify their data storage in Cassandra while increasing functionality.
 
+> [!NOTE]
+> Storing _often-changing_ resources as a blob in Cassandra is highly discouraged as it causes correspondingly-large tombstone and performance issues! Papyrus is useful for RESTful APIs where the resources are largely configuration resources that don't change very often. The other tools in the [HelenusDB collection](https://github.com/HelenusDB) help in other cases.
 ## Features
 * **Primary Table**: A `PrimaryTable`  is typically identified by a single-unique identifier (like a UUID) is easily defined using the PrimaryTable DSL.
 
@@ -15,7 +19,7 @@ Papyrus simplifies the management of resource-oriented Plain Old Java Objects (P
 
 * **Indexes**: An `Index` of the primary tale with a completely different key structure and only a reference to the primary table identifier (`Index`es don't replicate the primary table data) is maintained alongside the `PrimaryTable` via a Unit of Work.
 
-* **UnitOfWork**: Papyrus includes a built-in UnitOfWork class that provides pseudo-transactions across `PrimaryTable`s, `View`s, and `Index`es. There are implementations that honor various consistency levels.
+* **UnitOfWork**: Papyrus uses the UnitOfWork class from [HelenusDB Diago](https://github.com/HelenusDB/diago) that provides pseudo-transactions across `PrimaryTable`s, `View`s, and `Index`es. There are implementations that honor various consistency levels.
 
 * **Repository Pattern**: The project provides a default repository implementation, `CassandraPapyrusRepository` to enable quick and easy CRUD operations for storing and retrieving PoJos on Cassandra.
 
@@ -136,7 +140,7 @@ Key definition strings are expected to follow a specific format, which is define
 key-definition ::= "(" partition-key ")" clustering-key modifier
 partition-key ::= column-definition | column-definition "," column-definition
 clustering-key ::= clustering-key-component | clustering-key "," clustering-key-component
-modifier ::= "unique" | ε
+modifier ::= "unique" | null
 clustering-key-component ::= "+" column-definition | "-" column-definition | column-definition
 column-definition ::= name-type-pair | property-name " as " name-type-pair
 name-type-pair ::= name ":" type
