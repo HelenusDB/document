@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>HelenusDB Papyrus</name>
+	<description>Document-oriented storage (e.g like MongoDB) for Cassandra.</description>
+	<artifactId>helenusdb-papyrus</artifactId>
+	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>com.helenusdb</groupId>
+		<artifactId>helenusdb-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<driver.version>4.13.0</driver.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.helenusdb</groupId>
+			<artifactId>helenusdb-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.helenusdb</groupId>
+			<artifactId>helenusdb-diago</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<!--dependency>
+			<groupId>com.helenusdb.papyrus</groupId>
+			<artifactId>papyrus-gson-provider</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.helenusdb.papyrus</groupId>
+			<artifactId>papyrus-jackson-provider</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>test</scope>
+		</dependency-->
+		<dependency>
+			<groupId>com.datastax.oss</groupId>
+			<artifactId>java-driver-core</artifactId>
+			<version>${driver.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+</project>
