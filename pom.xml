@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<name>HelenusDB Papyrus</name>
-	<description>Document-oriented storage (e.g like MongoDB) for Cassandra.</description>
-	<artifactId>helenusdb-papyrus</artifactId>
+	<description>Document-oriented schema-less storage (e.g like MongoDB) for Cassandra.</description>
+	<artifactId>helenusdb-document</artifactId>
 	<packaging>jar</packaging>
 
 	<parent>
@@ -25,7 +25,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.helenusdb</groupId>
-			<artifactId>helenusdb-diago</artifactId>
+			<artifactId>helenusdb-transact</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<!--dependency>
