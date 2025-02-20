@@ -1,7 +1,7 @@
 package com.strategicgains.noschema.document;
 
-import com.strategicgains.noschema.Identifiable;
-import com.strategicgains.noschema.Identifier;
+import com.helenusdb.core.Identifiable;
+import com.helenusdb.core.Identifier;
 
 /**
  * EntityObserver is an interface for classes that wish to observe the lifecycle

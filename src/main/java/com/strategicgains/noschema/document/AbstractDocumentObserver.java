@@ -1,7 +1,7 @@
 package com.strategicgains.noschema.document;
 
-import com.strategicgains.noschema.Identifiable;
-import com.strategicgains.noschema.Identifier;
+import com.helenusdb.core.Identifiable;
+import com.helenusdb.core.Identifier;
 
 /**
  * This class is useful for creating a {@link DocumentObserver} that only observes a few of the lifecycle points.

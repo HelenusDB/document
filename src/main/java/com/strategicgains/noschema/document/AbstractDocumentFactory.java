@@ -1,9 +1,9 @@
 package com.strategicgains.noschema.document;
 
-import com.strategicgains.noschema.Identifiable;
-import com.strategicgains.noschema.Identifier;
-import com.strategicgains.noschema.exception.InvalidIdentifierException;
-import com.strategicgains.noschema.exception.KeyDefinitionException;
+import com.helenusdb.core.Identifiable;
+import com.helenusdb.core.Identifier;
+import com.helenusdb.core.exception.InvalidIdentifierException;
+import com.helenusdb.document.exception.KeyDefinitionException;
 
 /**
  * Produces Document instances from a POJO and POJO instances from Document instances.

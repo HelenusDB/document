@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.strategicgains.noschema.Identifiable;
-import com.strategicgains.noschema.Identifier;
+import com.helenusdb.core.Identifiable;
+import com.helenusdb.core.Identifier;
 
 /**
  * A Document is a container for a serialized object that can be stored in a key/value or columnar store.

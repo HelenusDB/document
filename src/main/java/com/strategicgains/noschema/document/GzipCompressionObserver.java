@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import com.strategicgains.noschema.exception.StorageException;
+import com.helenusdb.core.exception.HelenusdbException;
 
 /**
  * This class is a DocumentObserver that compresses and decompresses the data in a Document using GZIP compression.
@@ -39,7 +39,7 @@ extends AbstractDocumentObserver
         }
 		catch (IOException e)
 		{
-			throw new StorageException(String.format("Error compressing data for document: %s", document.getType()), e);
+			throw new HelenusdbException(String.format("Error compressing data for document: %s", document.getType()), e);
 		}
 
 		document.setObject(baos.toByteArray());
@@ -68,7 +68,7 @@ extends AbstractDocumentObserver
 		}
 		catch (IOException e)
 		{
-			throw new StorageException(String.format("Error decompressing data for document: %s", document.getType()), e);
+			throw new HelenusdbException(String.format("Error decompressing data for document: %s", document.getType()), e);
 		}
 	}
 }
