@@ -1,17 +1,17 @@
-# HelenusDB Papyrus
+# HelenusDB Document
 
 **Cassandra's Gone Schema-less!**
 
-HelenusDB Papyrus enables document-oriented storage for Cassandra. It eliminates the need for a predefined schema, thereby providing significant flexibility in domain modeling without necessitating table data migrations.
+HelenusDB Document enables document-oriented storage for Cassandra. It eliminates the need for a predefined schema, thereby providing significant flexibility in domain modeling without necessitating table data migrations.
 
-In Papyrus, only the keys that form an object's identifier are stored as individual columns. These keys are extracted from the entity at storage time. The object itself is serialized into a storage format through a pluggable serialization process and stored as a binary blob. Currently, Papyrus supports BSON (like MongoDB) and GSON (JSON) serialization formats.
+In Document, only the keys that form an object's identifier are stored as individual columns. These keys are extracted from the entity at storage time. The object itself is serialized into a storage format through a pluggable serialization process and stored as a binary blob. Currently, Document supports BSON (like MongoDB) and GSON (JSON) serialization formats.
 
-Given that usage of materialized views and indexes in Cassandra are discouraged (at least in high-throughput scenarios), Papyrus introduces the concepts of a `PrimaryTable`, `View`, and `Index`. These are fully managed and encapsulated within a Repository pattern that implements UnitOfWork (HelenusDB Diago). This ensures that multiple, denormalized tables are written; one for each key format, eliminating complex coding, reducing time-to-market, increasing developer efficiency and software accuracy.
+Given that usage of materialized views and indexes in Cassandra are discouraged (at least in high-throughput scenarios), Document introduces the concepts of a `PrimaryTable`, `View`, and `Index`. These are fully managed and encapsulated within a Repository pattern that implements UnitOfWork (HelenusDB Diago). This ensures that multiple, denormalized tables are written; one for each key format, eliminating complex coding, reducing time-to-market, increasing developer efficiency and software accuracy.
 
-Papyrus simplifies the management of resource-oriented Plain Old Java Objects (PoJos) with multiple, denormalized views, and indexes. This is achieved through a straightforward Repository pattern, making it an ideal choice for developers building RESTful APIs to simplify their data storage in Cassandra while increasing functionality.
+Document simplifies the management of resource-oriented Plain Old Java Objects (PoJos) with multiple, denormalized views, and indexes. This is achieved through a straightforward Repository pattern, making it an ideal choice for developers building RESTful APIs to simplify their data storage in Cassandra while increasing functionality.
 
 > [!NOTE]
-> Storing _often-changing_ resources as a blob in Cassandra is highly discouraged as it causes correspondingly-large tombstone and performance issues! Papyrus is useful for RESTful APIs where the resources are largely configuration resources that don't change very often. The other tools in the [HelenusDB collection](https://github.com/HelenusDB) help in other cases.
+> Storing _often-changing_ resources as a blob in Cassandra is highly discouraged as it causes correspondingly-large tombstone and performance issues! Document is useful for RESTful APIs where the resources are largely configuration resources that don't change very often. The other tools in the [HelenusDB collection](https://github.com/HelenusDB) help in other cases.
 ## Features
 * **Primary Table**: A `PrimaryTable`  is typically identified by a single-unique identifier (like a UUID) is easily defined using the PrimaryTable DSL.
 
@@ -19,9 +19,9 @@ Papyrus simplifies the management of resource-oriented Plain Old Java Objects (P
 
 * **Indexes**: An `Index` of the primary tale with a completely different key structure and only a reference to the primary table identifier (`Index`es don't replicate the primary table data) is maintained alongside the `PrimaryTable` via a Unit of Work.
 
-* **UnitOfWork**: Papyrus uses the UnitOfWork class from [HelenusDB Diago](https://github.com/HelenusDB/diago) that provides pseudo-transactions across `PrimaryTable`s, `View`s, and `Index`es. There are implementations that honor various consistency levels.
+* **UnitOfWork**: Document uses the UnitOfWork class from [HelenusDB Diago](https://github.com/HelenusDB/diago) that provides pseudo-transactions across `PrimaryTable`s, `View`s, and `Index`es. There are implementations that honor various consistency levels.
 
-* **Repository Pattern**: The project provides a default repository implementation, `CassandraPapyrusRepository` to enable quick and easy CRUD operations for storing and retrieving PoJos on Cassandra.
+* **Repository Pattern**: The project provides a default repository implementation, `CassandraDocumentRepository` to enable quick and easy CRUD operations for storing and retrieving PoJos on Cassandra.
 
 * **Repository Observer**: When you need to "get in the game" of the repository, the `DocumentObserver` class can be implemented to inject your own code into the processing chain. The default, do-nothing implementation is `AbstractDocumentObserver` which can be extended when only a method or two need overriding. There is also, `EntityObserver` for when the entity contained in the document needs tweaking before or after serialization.
 
@@ -38,14 +38,14 @@ The project is divided into four main modules:
 
 1. **bson-provider**: This module provides the BsonObjectCodec class for BSON serialization and deserialization. The class implements the ObjectCodec interface and provides methods for serializing and deserializing objects to and from BSON format.
 
-1. **gson-provider**: This module provides the GsonObjectCodec class for Gson serialization and deserialization. The class implements the ObjectCodec interface and provides methods for serializing and deserializing objects to and from Gson format. The class is located in the com.strategicgains.Papyrus.gson package.
+1. **gson-provider**: This module provides the GsonObjectCodec class for Gson serialization and deserialization. The class implements the ObjectCodec interface and provides methods for serializing and deserializing objects to and from Gson format. The class is located in the com.strategicgains.Document.gson package.
 
 ## Getting Started
-1. One requirement for using Papyrus is that entities **MUST** implement the `Identifiable` interface which needs a `getId()` method returning an `Identifier` instance containing the primary identifier components for the entity.
+1. One requirement for using Document is that entities **MUST** implement the `Identifiable` interface which needs a `getId()` method returning an `Identifier` instance containing the primary identifier components for the entity.
 
 1. Choose a serialization provider: BSON (recommended) and GSON are built-in. But if you want to use something that's already in your project, implement the `ObjectCodec` interface.
 
-1. Override the CassandraPapyrusRepository for each PoJo, defining the `PrimaryTable`s and `View`s for the resource (See: *Defining Keys*, below).
+1. Override the CassandraDocumentRepository for each PoJo, defining the `PrimaryTable`s and `View`s for the resource (See: *Defining Keys*, below).
 
 1. Override any methods needed in `AbstractDocumentObserver` to process entities before or after encoding or before or after storage. For example, encryption/decryption of the entity, event streaming for CUD operations, etc. Add your observer to the repository constructor using the `.withObserver()` DSL setter.
 
@@ -57,12 +57,12 @@ For the recommended configuration using BSON as the serialization provider, ther
 ```xml
 <dependency>
 	<groupId>com.helenusdb</groupId>
-	<artifactId>helenusdb-papyrus</artifactId>
+	<artifactId>helenusdb-document</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 </dependency>
 <dependency>
 	<groupId>com.helenusdb</groupId>
-	<artifactId>papyrus-bson-provider</artifactId>
+	<artifactId>document-bson-provider</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -71,20 +71,20 @@ If GSON is desired instead:
 ```xml
 <dependency>
 	<groupId>com.helenusdb</groupId>
-	<artifactId>helenusdb-papyrus</artifactId>
+	<artifactId>helenusdb-document</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 </dependency>
 <dependency>
 	<groupId>com.helenusdb</groupId>
-	<artifactId>papyrus-gson-provider</artifactId>
+	<artifactId>document-gson-provider</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
 ## Usage
-Here is a basic example of how to use Papyrus.
+Here is a basic example of how to use Document.
 
-Note that this example doesn't override the default `CassandraPapyrusRepository` but uses it raw for illustration purposes.
+Note that this example doesn't override the default `CassandraDocumentRepository` but uses it raw for illustration purposes.
 You will likely want to override it to scope it to your own resources.:
 
 ```java
@@ -101,7 +101,7 @@ throws KeyDefinitionException, InvalidIdentifierException, DuplicateItemExceptio
 	{
 		// Create a Repository instance.
 		// This one uses the asyncronous UnitOfWork and BSON serialization.
-		CassandraPapyrusRepository<Album> albums = new CassandraPapyrusRepository<>(session, albumsTable, UnitOfWorkType.ASYNC, new BsonObjectCodec());
+		CassandraDocumentRepository<Album> albums = new CassandraDocumentRepository<>(session, albumsTable, UnitOfWorkType.ASYNC, new BsonObjectCodec());
 
 		// this creates any missing underlying Cassandra tables (for both PrimaryTable and any Views)
 		albums.ensureTables();
@@ -132,7 +132,7 @@ throws KeyDefinitionException, InvalidIdentifierException, DuplicateItemExceptio
 
 ### Defining Keys
 
-Papyrus has its own key definition language. While it is very similar to Cassandra's Partition Key and Clustering Key concepts, it needs a type for each of those components. It also allows the mapping of PoJo property names to a column name that doesn't match. Additionally, Papyrus supports uniqueness enforcement while Cassandra does not.
+Document has its own key definition language. While it is very similar to Cassandra's Partition Key and Clustering Key concepts, it needs a type for each of those components. It also allows the mapping of PoJo property names to a column name that doesn't match. Additionally, Document supports uniqueness enforcement while Cassandra does not.
 
 Key definition strings are expected to follow a specific format, which is defined as follows:
 
